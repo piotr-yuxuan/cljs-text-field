@@ -6,6 +6,8 @@
 (defn main-panel []
   (let [name (subscribe [:name])
         db (subscribe [:app-db])]
+    #(dispatch [:form/set {:key   :some-data
+                           :value "1,123.345"}])
     (fn []
       [:div
        [:p {} "Custom text-field state"]
@@ -13,7 +15,10 @@
                     (-> @db :field-states ::main-field))]
        [:div "Hello from " @name]
        [custom/text-field {:field-attrs {:id             ::main-field
-                                         :value->display #(when % (str "-> " % " <-"))
+                                         :value->display #(when % (str "\uD83D\uDE4C " % " €"))
+                                         :input->value   (fn [new current] (if (re-matches #"[0-9,.\ ]*" new)
+                                                                             new
+                                                                             current))
                                          :label          "Fixed floating label"
                                          :placeholder    "Text for placeholder"}
                            :data-params {:form-name :foobar

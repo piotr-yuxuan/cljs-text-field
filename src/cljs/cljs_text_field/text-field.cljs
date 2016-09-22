@@ -122,8 +122,8 @@ state attribute `:clean?` comes from standard callemall Material UI library but 
                                    [displayed-value-comp field-attrs data-params]
                                    [:input {:id        id
                                             :style     (merge (:input styles)
-                                                              input-style
-                                                              {:opacity (if (:focused? @field-state) 1 0)})
+                                                              {:opacity (if (:focused? @field-state) 1 0)}
+                                                              input-style)
                                             :type      :text
                                             :value     @db-value
                                             :on-focus  #(set-state {:focused? true})
