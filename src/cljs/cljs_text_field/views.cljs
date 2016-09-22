@@ -3,6 +3,21 @@
             [re-frame.core :refer [subscribe dispatch]]
             [cljs-react-material-ui.reagent :as mui]))
 
+(def french-display
+  #(-> %
+       js/parseFloat
+       (.toLocaleString "fr-FR"
+                        (clj->js {:style    :currency
+                                  :currency :EUR}))))
+
+(def fancy-display
+  #(str "\uD83D\uDE4C "
+        (-> %
+            js/parseFloat
+            (.toLocaleString "zh-Hans-CN-u-nu-hanidec"
+                             (clj->js {:style    "currency"
+                                       :currency "JPY"})))))
+
 (defn main-panel []
   (let [name (subscribe [:name])
         db (subscribe [:app-db])]
@@ -14,9 +29,10 @@
        [:ul {} (map (fn [[k v]] [:li {:key (str k)} [:span {:style {:font-weight :bold}} (str k)] " " (str v)])
                     (-> @db :field-states ::main-field))]
        [:div "Hello from " @name]
+
        [custom/text-field {:field-attrs {:id             ::main-field
-                                         :value->display #(when % (str "\uD83D\uDE4C " % " €"))
-                                         :input->value   (fn [new current] (if (re-matches #"[0-9,.\ ]*" new)
+                                         :value->display french-display
+                                         :input->value   (fn [new current] (if (re-matches #"[0-9.\ ]*" new)
                                                                              new
                                                                              current))
                                          :label          "Fixed floating label"
